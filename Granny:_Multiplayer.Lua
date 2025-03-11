@@ -1,4 +1,4 @@
---Granny script
+--granny script
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
@@ -34,108 +34,163 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
--- Function to get an item
+-- Function to create ESP
+local function createESP(object, color)
+    if object and not object:FindFirstChild("ESP") then
+        local highlight = Instance.new("Highlight")
+        highlight.Parent = object
+        highlight.Name = "ESP"
+        highlight.FillColor = color
+        highlight.OutlineColor = Color3.new(1, 1, 1)
+        highlight.OutlineTransparency = 0.5
+    end
+end
+
+-- ESP Functions
+local function espGranny()
+    for i = 1, 10 do
+        local preset = game.workspace:FindFirstChild("Preset" .. i)
+        if preset and preset:FindFirstChild("Locks") and preset.Locks:FindFirstChild("Granny") then
+            createESP(preset.Locks.Granny, Color3.fromRGB(255, 0, 0)) -- Red
+        end
+    end
+end
+
+local function espGrandpa()
+    for i = 1, 10 do
+        local preset = game.workspace:FindFirstChild("Preset" .. i)
+        if preset and preset:FindFirstChild("Locks") and preset.Locks:FindFirstChild("Grandpa") then
+            createESP(preset.Locks.Grandpa, Color3.fromRGB(0, 255, 0)) -- Green
+        end
+    end
+end
+
+local function espSlendrinaMother()
+    for i = 1, 10 do
+        local preset = game.workspace:FindFirstChild("Preset" .. i)
+        if preset and preset:FindFirstChild("Locks") and preset.Locks:FindFirstChild("SlendrinaMother") then
+            createESP(preset.Locks.SlendrinaMother, Color3.fromRGB(0, 0, 255)) -- Blue
+        end
+    end
+end
+
+local function espGranny_Chapter3()
+    for i = 1, 10 do
+        local preset = game.workspace:FindFirstChild("Preset" .. i)
+        if preset and preset:FindFirstChild("Granny") then
+            createESP(preset.Granny, Color3.fromRGB(255, 0, 0)) -- Red
+        end
+    end
+end
+
+local function espGrandpa_Chapter3()
+    for i = 1, 10 do
+        local preset = game.workspace:FindFirstChild("Preset" .. i)
+        if preset and preset:FindFirstChild("Grandpa") then
+            createESP(preset.Grandpa, Color3.fromRGB(0, 255, 0)) -- Green
+        end
+    end
+end
+
+local function espSlendrina_Chapter3()
+    for i = 1, 10 do
+        local preset = game.workspace:FindFirstChild("Preset" .. i)
+        if preset and preset:FindFirstChild("Slendrina") then
+            createESP(preset.Slendrina, Color3.fromRGB(255, 255, 0)) -- Yellow
+        end
+    end
+end
+
+-- ESP Tab
+local ESP_Tab = Window:CreateTab("ESP", 4483362458)
+
+local ESP_Chapter1 = ESP_Tab:CreateSection("Chapter 1 ESP")
+ESP_Tab:CreateButton({ Name = "ESP Granny", Callback = espGranny })
+ESP_Tab:CreateButton({ Name = "ESP Slendrina Mother", Callback = espSlendrinaMother })
+
+local ESP_Chapter2 = ESP_Tab:CreateSection("Chapter 2 ESP")
+ESP_Tab:CreateButton({ Name = "ESP Granny (Chapter 2)", Callback = espGranny })
+ESP_Tab:CreateButton({ Name = "ESP Grandpa", Callback = espGrandpa })
+
+local ESP_Chapter3 = ESP_Tab:CreateSection("Chapter 3 ESP")
+ESP_Tab:CreateButton({ Name = "ESP Granny (Chapter 3)", Callback = espGranny_Chapter3 })
+ESP_Tab:CreateButton({ Name = "ESP Grandpa (Chapter 3)", Callback = espGrandpa_Chapter3 })
+ESP_Tab:CreateButton({ Name = "ESP Slendrina (Chapter 3)", Callback = espSlendrina_Chapter3 })
+
+-- Item System
 local function get(name)
     for i = 1, 10 do
-        local preset = game.Workspace:FindFirstChild("Preset" .. i)
+        local preset = game.workspace:FindFirstChild("Preset" .. i)
         if preset and preset:FindFirstChild(name) then
             preset:FindFirstChild(name).InteractRemote:FireServer(game.Players.LocalPlayer)
         end
     end
 end
 
--- Function to get ammo
 local function ammo(name)
     for i = 1, 10 do
-        local preset = game.Workspace:FindFirstChild("Preset" .. i)
-        if preset then
-            local ammoContainer = preset:FindFirstChild("Ammo")
-            if ammoContainer and ammoContainer:FindFirstChild(name) then
-                ammoContainer:FindFirstChild(name).InteractRemote:FireServer(game.Players.LocalPlayer)
-            end
+        local preset = game.workspace:FindFirstChild("Preset" .. i)
+        if preset and preset:FindFirstChild("Ammo") and preset.Ammo:FindFirstChild(name) then
+            preset.Ammo:FindFirstChild(name).InteractRemote:FireServer(game.Players.LocalPlayer)
         end
     end
 end
 
--- Function to get a weapon
 local function weapon(name)
-    local General = game.Workspace:FindFirstChild("General Items")
+    local General = game.workspace:FindFirstChild("General Items")
     if General and General:FindFirstChild(name) then
         General:FindFirstChild(name).InteractRemote:FireServer(game.Players.LocalPlayer)
     end
 end
 
--- Get Items Tab
-local Tab = Window:CreateTab("Chapter 1 - 3", 4483362458)
-local Section = Tab:CreateSection("Get Items")
+-- Create UI Elements for Items
+local Item_Tab = Window:CreateTab("Chapter 1 - 3", 4483362458)
+local Item_Section = Item_Tab:CreateSection("Get Items")
 
--- Inputs for Items, Ammo, and Weapons
-local AmmoInput = Tab:CreateInput({
-    Name = "Input Ammo/bullet",
-    CurrentValue = "",
-    PlaceholderText = "Input full name",
-    RemoveTextAfterFocusLost = false,
-    Flag = "AmmoInput",
-})
-
-local ItemInput = Tab:CreateInput({
+local ItemInput = Item_Tab:CreateInput({
     Name = "Input Item Name",
-    CurrentValue = "",
     PlaceholderText = "Input full name",
-    RemoveTextAfterFocusLost = false,
     Flag = "ItemInput",
+    Callback = function(Text) end
 })
 
-local WeaponInput = Tab:CreateInput({
-    Name = "Input Weapon Name",
-    CurrentValue = "",
+local AmmoInput = Item_Tab:CreateInput({
+    Name = "Input Ammo/bullet",
     PlaceholderText = "Input full name",
-    RemoveTextAfterFocusLost = false,
-    Flag = "WeaponInput",
+    Flag = "AmmoInput",
+    Callback = function(Text) end
 })
 
--- Buttons to Get Items
-Tab:CreateButton({ Name = "Get Item", Callback = function() get(ItemInput.CurrentValue) end })
-Tab:CreateButton({ Name = "Get Ammo", Callback = function() ammo(AmmoInput.CurrentValue) end })
-Tab:CreateButton({ Name = "Get Weapon", Callback = function() weapon(WeaponInput.CurrentValue) end })
+local WeaponInput = Item_Tab:CreateInput({
+    Name = "Input Weapon Name",
+    PlaceholderText = "Input full name",
+    Flag = "WeaponInput",
+    Callback = function(Text) end
+})
 
--- ESP Tab
-local ESP_Tab = Window:CreateTab("ESP", 4483362458)
-
-local function createESP(target)
-    if target then
-        local highlight = Instance.new("Highlight")
-        highlight.Adornee = target
-        highlight.Parent = game.CoreGui
-    end
-end
-
--- ESP Buttons
-ESP_Tab:CreateButton({ Name = "ESP Granny & Slendrina Mother (Chapter 1)", Callback = function()
-    for i = 1, 10 do
-        local preset = game.Workspace:FindFirstChild("Preset" .. i)
-        if preset and preset:FindFirstChild("Locks") then
-            createESP(preset.Locks.Granny)
-            createESP(preset.Locks.SlendrinaMother)
+Item_Tab:CreateButton({
+    Name = "Get Item",
+    Callback = function()
+        if ItemInput.CurrentValue ~= "" then get(ItemInput.CurrentValue) else
+            Rayfield:Notify({ Title = "Error", Content = "Enter an item name!", Duration = 3, Type = "Warning" })
         end
-    end
-end})
+    end,
+})
 
-ESP_Tab:CreateButton({ Name = "ESP Granny & Grandpa (Chapter 2)", Callback = function()
-    for i = 1, 10 do
-        local preset = game.Workspace:FindFirstChild("Preset" .. i)
-        if preset and preset:FindFirstChild("Locks") then
-            createESP(preset.Locks.Granny)
-            createESP(preset.Locks.Grandpa)
+Item_Tab:CreateButton({
+    Name = "Get Ammo",
+    Callback = function()
+        if AmmoInput.CurrentValue ~= "" then ammo(AmmoInput.CurrentValue) else
+            Rayfield:Notify({ Title = "Error", Content = "Enter an ammo name!", Duration = 3, Type = "Warning" })
         end
-    end
-end})
+    end,
+})
 
-ESP_Tab:CreateButton({ Name = "ESP Granny, Grandpa & Slendrina (Chapter 3)", Callback = function()
-    for i = 1, 10 do
-        local preset = game.Workspace:FindFirstChild("Preset" .. i)
-        createESP(preset.Granny)
-        createESP(preset.Grandpa)
-        createESP(preset.Slendrina)
-    end
-end})
+Item_Tab:CreateButton({
+    Name = "Get Weapon",
+    Callback = function()
+        if WeaponInput.CurrentValue ~= "" then weapon(WeaponInput.CurrentValue) else
+            Rayfield:Notify({ Title = "Error", Content = "Enter a weapon name!", Duration = 3, Type = "Warning" })
+        end
+    end,
+})
